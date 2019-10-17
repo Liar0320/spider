@@ -10,5 +10,11 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}\\src\\process.js"
         }
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test ",
+            "program": "${workspaceFolder}\\test\\index.test.js"
+        }
     ]
 }
