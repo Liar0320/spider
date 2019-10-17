@@ -1,11 +1,10 @@
 const spider = require("./index");
 
-function createBookInfo({name, author, url, description}) {
+function createChapterInfo({chapterName, url, index }) {
     return {
-        name,
-        author,
+        chapterName,
         url,
-        description
+        index
     }
 }
 
@@ -21,12 +20,12 @@ function spiderBookChapters(url) {
           
           let bookChapterList = []
 
-          $('.bookinfo').each((index, item)=>{
+          $('.listmain a').each((index, item)=>{
               const el = $(item);
-              const url = el.find('.bookname a').attr('href');
-            
+              const chapterName = el.text();
+              const url = el.attr('href')
 
-              bookChapterList.push(url);
+              bookChapterList.push( createChapterInfo({chapterName, url, index}));
           })
          
 
