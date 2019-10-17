@@ -1,0 +1,6 @@
+// {
+//     "javascript.validate.enable": false,
+//     "prettier.eslintIntegration": true, //让prettier使用eslint的代码格式进行校验
+//     "editor.formatOnSave": false,
+//     "eslint.autoFixOnSave": true,
+// }
