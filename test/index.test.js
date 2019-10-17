@@ -1,1 +1,2 @@
-require('./spiderBookChapters.test');
+// require('./spiderBookChapters.test');
+require('./spiderChapterInfo.test');
