@@ -11,6 +11,7 @@ function spiderMain(url) {
     return new Promise((resolve, resject)=>{
         var server = url.match(/^https:\/\//) ? https:http;
 
+        console.info("正在发起请求，请求地址：" +url);
         server.get(url, (res)=>{
             const arrBuf = [];
             var BufLength = 0;
@@ -20,6 +21,7 @@ function spiderMain(url) {
               BufLength +=chunk.length;
             });
             res.on('end', ()=>{    
+                console.info("请求数据完毕：" +url);
                 var chunkAll = Buffer.concat(arrBuf, BufLength);
                 var $ = cheerio.load(chunkAll, {decodeEntities: false});
                 var html = '';
