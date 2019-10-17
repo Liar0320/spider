@@ -4,6 +4,8 @@ const spiderLikeBook = require("./spiderLikeBook");
 
 const spiderBookChapters = require("./spiderBookChapters");
 
+const spiderChapterInfo = require("./spiderChapterInfo");
+
 /**生成搜索地址 */
 function packLikeBookUrl(fileName) {
     return baseUrl + '/s.php?q=' + encodeURIComponent(fileName);
@@ -24,6 +26,6 @@ module.exports.spiderBookChapters = function (bookurl) {
 }
 
 /**爬取小说章节内容 */
-module.exports.spiderBookInfo = function (bookurl) {
-    return spiderBookInfo(packBookInfoUrl(bookurl))
+module.exports.spiderChapterInfo = function (bookurl) {
+    return spiderChapterInfo(packBookChaptersUrl(bookurl))
 }

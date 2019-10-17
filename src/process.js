@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-17 17:51:50
+ * @Last Modified time: 2019-10-17 23:10:14
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -10,7 +10,7 @@
  */
 const { prompt } = require("inquirer")
 
-const { spiderLikeBook, spiderBookChapters } = require("./utils/spider");
+const { spiderLikeBook, spiderBookChapters, spiderChapterInfo } = require("./utils/spider");
 
 /**@type {Array<import("inquirer").Question>} */
 const question = [
@@ -50,6 +50,12 @@ return new Promise((resolve, reject)=>{
 ]
 
 module.exports = prompt(question).then(({filterName, selectedNovel, fileAddress})=>{
-    spiderBookChapters(selectedNovel.url)
+    spiderBookChapters(selectedNovel.url).then(bookChapters=>{
+        bookChapters.forEach(chapterInfo=>{
+            spiderChapterInfo(chapterInfo.url).then(content=>{
+                console.log(content);
+            })
+        })
+    })
     // console.log(filterName, selectedNovel, fileAddress);
 })
