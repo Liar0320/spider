@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-17 14:51:04
+ * @Last Modified time: 2019-10-17 17:51:50
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -10,7 +10,7 @@
  */
 const { prompt } = require("inquirer")
 
-const { spiderCatalog } = require("./utils/spider");
+const { spiderLikeBook, spiderBookChapters } = require("./utils/spider");
 
 /**@type {Array<import("inquirer").Question>} */
 const question = [
@@ -28,7 +28,7 @@ const question = [
 
             
 return new Promise((resolve, reject)=>{
-                spiderCatalog(filterName).then(catalogs=>{
+    spiderLikeBook(filterName).then(catalogs=>{
                     resolve(catalogs);
                 }).catch(err=>{
                     reject(err);
@@ -50,5 +50,6 @@ return new Promise((resolve, reject)=>{
 ]
 
 module.exports = prompt(question).then(({filterName, selectedNovel, fileAddress})=>{
-    console.log(filterName, selectedNovel, fileAddress);
+    spiderBookChapters(selectedNovel.url)
+    // console.log(filterName, selectedNovel, fileAddress);
 })
