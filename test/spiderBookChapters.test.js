@@ -7,8 +7,15 @@ function packBookChaptersUrl(bookurl) {
     return baseUrl + bookurl;
 }
 
-spiderBookChapters(packBookChaptersUrl(bookurl)).then(chapters=>{
-    console.log(chapters);
-})
 
+// spiderBookChapters(packBookChaptersUrl(bookurl)).then(chapters=>{
+//     console.log(chapters);
+// })
+
+
+module.exports = spiderBookChapters(packBookChaptersUrl(bookurl)).then(chapters=>{
+    console.log(chapters);
+    
+    return chapters
+})
 
