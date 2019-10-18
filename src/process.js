@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-17 23:10:14
+ * @Last Modified time: 2019-10-18 15:47:55
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -10,7 +10,12 @@
  */
 const { prompt } = require("inquirer")
 
-const { spiderLikeBook, spiderBookChapters, spiderChapterInfo } = require("./utils/spider");
+const { spiderLikeBook, spiderBookChapters } = require("./utils/spider");
+
+const generateFiles = require('./utils/generateFiles');
+
+const ConnectionPool = require('../src/utils/ConnectionPool')
+const connectionPool = new ConnectionPool();
 
 /**@type {Array<import("inquirer").Question>} */
 const question = [
@@ -45,17 +50,19 @@ return new Promise((resolve, reject)=>{
     {
         type: "input",
         name: "fileAddress",
-        default: "./"
+        default: "./download"
     }
 ]
 
 module.exports = prompt(question).then(({filterName, selectedNovel, fileAddress})=>{
     spiderBookChapters(selectedNovel.url).then(bookChapters=>{
-        bookChapters.forEach(chapterInfo=>{
-            spiderChapterInfo(chapterInfo.url).then(content=>{
-                console.log(content);
+        // bookChapters.length = 10;
+        connectionPool.register(bookChapters, function (allChapterInfo) {
+            // console.log(allChapterInfo);
+            allChapterInfo.forEach((chapterInfo, index)=>{
+                generateFiles({chapterName: chapterInfo.chapterName, bookName: selectedNovel.name, path: fileAddress, index, content: chapterInfo.content})
             })
         })
+        connectionPool.start();
     })
-    // console.log(filterName, selectedNovel, fileAddress);
 })
