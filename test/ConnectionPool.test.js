@@ -2,19 +2,19 @@ const bookChapters = require("./spiderBookChapters.test");
 const ConnectionPool = require('../src/utils/ConnectionPool')
 const connectionPool = new ConnectionPool();
 
-function test() {
+function test(callback) {
     return new Promise((resolve, reject)=>{
         bookChapters.then(res=>{
             let chapters = res;
         
-            chapters.length = 26;
+            chapters.length = 1000;
             // connectionPool.register(chapters, function (list) {
             //     resolve(list);
             // });
-            function callback(list) {
+          
+            connectionPool.register(chapters, callback || function (list) {
                 console.log(list);
-            }
-            connectionPool.register(chapters, callback)
+            })
             connectionPool.start();
 
             connectionPool.end = function () {
