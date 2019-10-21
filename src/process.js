@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-18 15:47:55
+ * @Last Modified time: 2019-10-21 11:27:37
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -55,14 +55,21 @@ return new Promise((resolve, reject)=>{
 ]
 
 module.exports = prompt(question).then(({filterName, selectedNovel, fileAddress})=>{
-    spiderBookChapters(selectedNovel.url).then(bookChapters=>{
+    spiderBookChapters(selectedNovel.url, selectedNovel.name, fileAddress).then(bookChapters=>{
         // bookChapters.length = 10;
-        connectionPool.register(bookChapters, function (allChapterInfo) {
+        function callback(allChapterInfo) {
             // console.log(allChapterInfo);
-            allChapterInfo.forEach((chapterInfo, index)=>{
-                generateFiles({chapterName: chapterInfo.chapterName, bookName: selectedNovel.name, path: fileAddress, index, content: chapterInfo.content})
+            allChapterInfo.forEach((chapterInfo)=>{
+                generateFiles({chapterInfo, bookName: selectedNovel.name, path: fileAddress})
             })
-        })
+        }
+        
+        connectionPool.register(bookChapters, callback)
+       
         connectionPool.start();
+
+        connectionPool.end = function () {
+            process.exit();
+        };
     })
 })
