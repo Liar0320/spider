@@ -23,13 +23,13 @@ function spiderMain(url) {
             timeout: 3000
         }), (error, response, body)=>{
             spinner.stop();
-            if (response.statusCode === 200) {
+            if (response && response.statusCode === 200) {
                 var html = iconv.decode(body, 'gb2312'); //用gbk解码
                 var $ = cheerio.load(html, {decodeEntities: false});
 
                 resolve($);
             } else {
-                reject(error);
+                reject(error, response);
             }
         })
     })
