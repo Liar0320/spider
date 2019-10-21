@@ -1,47 +1,36 @@
 const cheerio = require('cheerio');
 const iconv = require('iconv-lite');
-const http = require('http');
-const https = require('https');
+const request = require('request');
+const ora = require('ora');
+// const http = require('http');
+// const https = require('https');
 ///请求网页
 
 /**
  * @param {string} url
  */
 function spiderMain(url) {
-    return new Promise((resolve, resject)=>{
-        var server = url.match(/^https:\/\//) ? https:http;
+    return new Promise((resolve, reject)=>{
+        // var server = url.match(/^https:\/\//) ? https:http;
 
-        console.info("正在发起请求，请求地址：" +url);
-        server.get(url, (res)=>{
-            const arrBuf = [];
-            var BufLength = 0;
-    
-            res.on('data', (chunk)=>{
-              arrBuf.push(chunk);
-              BufLength +=chunk.length;
-            });
-            res.on('end', ()=>{    
-                console.info("请求数据完毕：" +url);
-                var chunkAll = Buffer.concat(arrBuf, BufLength);
-                var $ = cheerio.load(chunkAll, {decodeEntities: false});
-                var html = '';
-        
-                console.log('success');
-               $('meta').each((index, ele)=>{
-                   if ($(ele).attr().content.indexOf('gbk')>-1||$(ele).attr().content.indexOf('gb2312')) {
-                     html = iconv.decode(chunkAll, 'gbk'); //用gbk解码
-                     $ = cheerio.load(html, {decodeEntities: false});
-    
-    return false;
-                   } else if (index === $('meta').length-1) {
-                     $ = cheerio.load(html); ///默认utf-8
-    
-    return false;
-                   }   
-                });
+        // console.info("正在发起请求，请求地址：" +url);
+        const spinner = ora('加载数据').start();
+
+        request(({
+            url,
+            /**https://blog.csdn.net/weixin_33859844/article/details/86275783 */
+            encoding: null,
+            timeout: 3000
+        }), (error, response, body)=>{
+            spinner.stop();
+            if (response.statusCode === 200) {
+                var html = iconv.decode(body, 'gb2312'); //用gbk解码
+                var $ = cheerio.load(html, {decodeEntities: false});
 
                 resolve($);
-            })
+            } else {
+                reject(error);
+            }
         })
     })
 }
