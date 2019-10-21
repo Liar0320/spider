@@ -10,9 +10,9 @@ const spider = require("./index");
 
 
 /**爬取章节的 */
-function spiderChapterInfo(url) {
+function spiderChapterInfo(url, config) {
     
-    return spider(url).then(
+    return spider(url, config).then(
         /** 
          * @param {CheerioStatic} $ 
          */

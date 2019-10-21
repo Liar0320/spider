@@ -26,6 +26,6 @@ module.exports.spiderBookChapters = function (bookurl) {
 }
 
 /**爬取小说章节内容 */
-module.exports.spiderChapterInfo = function (bookurl) {
-    return spiderChapterInfo(packBookChaptersUrl(bookurl))
+module.exports.spiderChapterInfo = function (bookurl, config) {
+    return spiderChapterInfo(packBookChaptersUrl(bookurl), config)
 }

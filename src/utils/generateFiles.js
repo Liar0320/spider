@@ -21,7 +21,7 @@ module.exports = function ({path='./../download', bookName='龙王传说', chapt
 
             content = content.replace('https://www.abcxs.com/book/1279/19579469.html　　天才一秒记住本站地址：www.abcxs.com。ABC小说网手机版阅读网址：m.abcxs.com', '');
             appendFile(thridPath, content, function () {
-                console.log(`${thridPath} 添加成功`);
+                // console.log(`${thridPath} 添加成功`);
             })
         })
     })
