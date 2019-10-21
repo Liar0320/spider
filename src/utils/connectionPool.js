@@ -2,13 +2,13 @@
  * @Author: lich 
  * @Date: 2019-10-18 10:19:23 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-21 17:49:17
+ * @Last Modified time: 2019-10-21 23:49:52
  * @TODO:
  * register：注册所有的待链接
  * next：如果对象池中存在可用实例，则执行下一个链接
  * start：开始启动下载链接
  */
-
+const ProgressBar = require("progress");
 const Pool = require("./Pool");
 const {spiderChapterInfo} = require('./spider');
 // class SpiderChapterInfo {
@@ -35,7 +35,6 @@ class ConnectionPool {
         new Array(this.poolInstance.maxConnection).fill(null).forEach(()=>{
             this.poolInstance.put(spiderChapterInfo);
         })
-
         /**需要处理等待的链接 */
         this.waitConnection = waitConnection || [];
         /**所有连接处理的结果 */
@@ -50,6 +49,13 @@ class ConnectionPool {
         this.seekDone = seekDone || null;
         
         this.store = [];
+
+        this.bar = new ProgressBar('  downloading [:bar] :rate/chapter :percent :etas', {
+            complete: '=',
+            incomplete: ' ',
+            width: 20,
+            total: this.waitConnection.length
+        });
     }
 
     /**开启链接，如果当前等待连接存在， 并且 对象池中有可用的对象， 
@@ -62,7 +68,8 @@ class ConnectionPool {
            let instance = this.poolInstance.get();
            let params = this.waitConnection.shift();
 
-           instance(params.url).then(content=>{
+           instance(params.url, {isLoading: false}).then(content=>{
+            this.bar.tick({rate: params.chapterName});
             params.$code = 200;
             this.waitConnectionStatus.push(params);
             this.poolInstance.put(instance);
@@ -70,14 +77,15 @@ class ConnectionPool {
             this.setStore(Object.assign(params, {content: content}));
             // this.everyConnectionDone({code: 1, params: Object.assign(params, {content: content})});
            }).catch(error=>{
-            console.log(error);
+            this.bar.tick();
+            // console.log(error);
             params.$code = 0;
             params.$error = error;
             this.waitConnectionStatus.push(params);
             this.poolInstance.put(instance);
            })
         } else {
-            console.log("对象池被占用完，等待......................");
+            // console.log("对象池被占用完，等待......................");
         }
     }
 
