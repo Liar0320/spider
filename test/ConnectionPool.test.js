@@ -11,18 +11,19 @@ function test() {
             // connectionPool.register(chapters, function (list) {
             //     resolve(list);
             // });
-            function callback(list, status) {
+            function callback(list) {
                 console.log(list);
-                if (status === 'done') {
-                    resolve();
-                }
             }
-            connectionPool.register(chapters, callback, callback)
+            connectionPool.register(chapters, callback)
             connectionPool.start();
+
+            connectionPool.end = function () {
+                resolve('end');
+            }
         })
     })
 }
  test().then(res=>{ 
-console.log('done'); 
+console.log(res); 
 })
 module.exports = test; 
