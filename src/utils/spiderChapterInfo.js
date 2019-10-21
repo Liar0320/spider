@@ -17,13 +17,11 @@ function spiderChapterInfo(url) {
          * @param {CheerioStatic} $ 
          */
         function($) {
-          
           let content = '';
 
           content = $('#content').text()
-         
-
-return content
+          
+          return content
     })
 }
 
