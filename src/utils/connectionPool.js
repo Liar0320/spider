@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-18 10:19:23 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-21 11:16:56
+ * @Last Modified time: 2019-10-21 11:28:05
  * @TODO:
  * register：注册所有的待链接
  * next：如果对象池中存在可用实例，则执行下一个链接
@@ -27,7 +27,7 @@ class ConnectionPool {
         this.createFileCount = 20;
     }
 
-    register(waitConnection, callback, seekDone) {
+    register(waitConnection, seekDone) {
         /**创建对象池 */
         this.poolInstance = new Pool();
 
@@ -42,7 +42,7 @@ class ConnectionPool {
         this.queryConnectionDoneId = null;
 
         /**当当前链接全部完成触发的回调函数 */
-        this.callback = callback || noop ;
+        // this.callback = callback || noop ;
 
         /**当缓存溢出时抛给seekDone */
         this.seekDone = seekDone || null;
@@ -82,12 +82,21 @@ class ConnectionPool {
         this.next();
         this.queryConnectionDoneId = this.queryConnectionDone();
     }
+    
+    /**当当前链接全部完成触发的回调函数
+     * 结束
+     * @interface
+     */
+    end() {
+        console.log('done');
+    }
+
     close() {
-        this.callback(this.store, 'done');
+        // this.callback(this.store, 'done');
         this.waitConnection = null;
         this.queryConnectionDone = null;
-        this.callback = null;
-        this.store = [];
+        // this.callback = null;
+        this.clearStore();
     }
 
     /**设置每缓存多少个文件生成，本地对应的文件
@@ -108,6 +117,13 @@ class ConnectionPool {
         this.store.push(resultItem);
     }
 
+    clearStore() {
+        if (typeof this.seekDone === "function") { 
+            this.seekDone(this.store);
+            this.store = [];
+        }
+    }
+
     /**查询是否还有等待的链接，如果有则继续开启下一个链接，如果没有关闭销毁当前实例 */
     queryConnectionDone() {
        let queryConnectionDoneId = setInterval(() => {
@@ -115,6 +131,7 @@ class ConnectionPool {
                 if (this.poolInstance.size() === this.poolInstance.maxConnection) {
                     clearInterval(queryConnectionDoneId);
                     this.close();
+                    this.end();
                 } 
                 // else if (this.createFileCount > this.poolInstance.size()) {
                 //     this.close();
