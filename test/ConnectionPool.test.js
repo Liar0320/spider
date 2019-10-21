@@ -7,12 +7,15 @@ function test() {
         bookChapters.then(res=>{
             let chapters = res;
         
-            chapters.length = 10;
+            chapters.length = 26;
             // connectionPool.register(chapters, function (list) {
             //     resolve(list);
             // });
-            function callback(list) {
-                resolve(list);
+            function callback(list, status) {
+                console.log(list);
+                if (status === 'done') {
+                    resolve();
+                }
             }
             connectionPool.register(chapters, callback, callback)
             connectionPool.start();
@@ -20,6 +23,6 @@ function test() {
     })
 }
  test().then(res=>{ 
-console.log(res) 
+console.log('done'); 
 })
 module.exports = test; 
