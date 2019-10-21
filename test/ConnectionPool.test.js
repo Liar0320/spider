@@ -8,12 +8,18 @@ function test() {
             let chapters = res;
         
             chapters.length = 10;
-            connectionPool.register(chapters, function (list) {
+            // connectionPool.register(chapters, function (list) {
+            //     resolve(list);
+            // });
+            function callback(list) {
                 resolve(list);
-            });
+            }
+            connectionPool.register(chapters, callback, callback)
             connectionPool.start();
         })
     })
 }
-// test()
+ test().then(res=>{ 
+console.log(res) 
+})
 module.exports = test; 
