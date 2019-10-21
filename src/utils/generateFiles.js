@@ -1,9 +1,10 @@
 const {appendFile, exists, mkdir} = require("fs");
 const {join} = require("path");
 
-module.exports = function ({path='./download', bookName='龙王传说', chapterName='', content = '空内容', index}) {
+module.exports = function ({path='./../download', bookName='龙王传说', chapterInfo = {}}) {
+    var chapterName= chapterInfo.chapterName, content = chapterInfo.content, index = chapterInfo.index
     // console.log('generateFiles');
-    const pathName = join(__dirname, path)
+    const pathName = join(__dirname, '../', path)
 
     exists(pathName, function (isexists) {
         if (!isexists) {
