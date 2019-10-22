@@ -1,4 +1,9 @@
-# 1.0.0 (2019-10-21)
+# 1.0.0 (2019-10-22)
+
+
+### Bug Fixes
+
+* 如果response不存在会报错 ([8068719](https://github.com/Liar0320/spider/commit/8068719))
 
 
 ### Features
