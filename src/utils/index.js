@@ -23,7 +23,7 @@ function spiderMain(url, config = {isLoading: true}) {
             url,
             /**https://blog.csdn.net/weixin_33859844/article/details/86275783 */
             encoding: null,
-            timeout: 5000
+            timeout: 15000
         }), (error, response, body)=>{
             if (config.isLoading) {
                 spinner.stop();
