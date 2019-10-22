@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-18 10:19:23 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-21 23:49:52
+ * @Last Modified time: 2019-10-22 09:37:28
  * @TODO:
  * register：注册所有的待链接
  * next：如果对象池中存在可用实例，则执行下一个链接
@@ -24,7 +24,7 @@ function noop() {
 
 class ConnectionPool {
     constructor() {
-        this.createFileCount = 5;
+        this.createFileCount = 20;
     }
 
     register(waitConnection, seekDone) {
@@ -120,10 +120,22 @@ class ConnectionPool {
 
         console.log('总共请求 '+length+' 章');
         console.log("成功请求 "+success.length + ' 章' );
-        console.log("请求失败 "+error.length + ' 章：分别为：');
-        error.forEach(res=>{
-            console.log(res.chapterName +' :' + res.$error.message);
-        })
+        console.log("请求失败 "+error.length + ' 章');
+     
+        /**如果有失败的章节 */
+        if (error.length>0) {
+            console.log("分别为：");
+            error.forEach(res=>{
+                console.log(res.chapterName +' :' + res.$error.message);
+            })
+
+            console.log("重新请求失败的章节：");
+            this.waitConnection = error;
+            
+            return false;
+        }
+            
+            return true;
     }
 
     close() {
@@ -165,10 +177,11 @@ class ConnectionPool {
        let queryConnectionDoneId = setInterval(() => {
             if (this.waitConnection.length === 0) {
                 if (this.poolInstance.size() === this.poolInstance.maxConnection) {
-                    clearInterval(queryConnectionDoneId);
-                    this.beforeEndMessage();
-                    this.close();
-                    this.end();
+                    if (this.beforeEndMessage()) {
+                        clearInterval(queryConnectionDoneId);
+                        this.close();
+                        this.end();
+                    }
                 } 
                 // else if (this.createFileCount > this.poolInstance.size()) {
                 //     this.close();
