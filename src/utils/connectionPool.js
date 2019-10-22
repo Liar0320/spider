@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-18 10:19:23 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-22 09:37:28
+ * @Last Modified time: 2019-10-22 09:42:08
  * @TODO:
  * register：注册所有的待链接
  * next：如果对象池中存在可用实例，则执行下一个链接
@@ -25,6 +25,7 @@ function noop() {
 class ConnectionPool {
     constructor() {
         this.createFileCount = 20;
+        this.turn = 0;
     }
 
     register(waitConnection, seekDone) {
@@ -122,14 +123,16 @@ class ConnectionPool {
         console.log("成功请求 "+success.length + ' 章' );
         console.log("请求失败 "+error.length + ' 章');
      
-        /**如果有失败的章节 */
-        if (error.length>0) {
+        /**如果有失败的章节 并且重新请求的次数小于四次  否则自动停止程序*/
+        if (error.length>0 && this.turn <4) {
             console.log("分别为：");
             error.forEach(res=>{
                 console.log(res.chapterName +' :' + res.$error.message);
             })
 
             console.log("重新请求失败的章节：");
+            /**在重新发起请求的时候 回合数自增 */
+            this.turn ++ ;
             this.waitConnection = error;
             
             return false;
