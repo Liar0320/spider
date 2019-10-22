@@ -2,6 +2,7 @@ const cheerio = require('cheerio');
 const iconv = require('iconv-lite');
 const request = require('request');
 const ora = require('ora');
+const {timeout} = require('../../project.config');
 // const http = require('http');
 // const https = require('https');
 ///请求网页
@@ -23,7 +24,7 @@ function spiderMain(url, config = {isLoading: true}) {
             url,
             /**https://blog.csdn.net/weixin_33859844/article/details/86275783 */
             encoding: null,
-            timeout: 15000
+            timeout: timeout|| 15000
         }), (error, response, body)=>{
             if (config.isLoading) {
                 spinner.stop();

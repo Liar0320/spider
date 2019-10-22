@@ -1,33 +1,14 @@
-const {appendFile, exists, mkdir} = require("fs");
+const {appendFile} = require("fs");
 const {join} = require("path");
+const { downloadDirector } = require("../../project.config"); 
 
-module.exports = function ({path='./../download', bookName='龙王传说', chapterInfo = {}}) {
-    var chapterName= chapterInfo.chapterName, content = chapterInfo.content, index = chapterInfo.index
-    // console.log('generateFiles');
-    const pathName = join(__dirname, '../../', path)
+module.exports = function ({bookName='龙王传说', chapterInfo = {}, path = join(downloadDirector, bookName)}) {
+    var chapterName = chapterInfo.chapterName, content = chapterInfo.content, index = chapterInfo.index
 
-    exists(pathName, function (isexists) {
-        if (!isexists) {
-            mkdir(pathName, function () {});
-        } 
-        const nextPath = join(pathName, bookName);
+    const chapterAddress = join(path, index + '.' + chapterName + '.txt');
 
-        exists(nextPath, function (isexists) {
-            if (!isexists) {
-                mkdir(nextPath, function () {});
-                // console.log(join(pathName, index + '.'+ chapterName));
-            } 
-            const thridPath = join(nextPath, index + '.' + chapterName + '.txt');
-
-            content = content.replace('https://www.abcxs.com/book/1279/19579469.html　　天才一秒记住本站地址：www.abcxs.com。ABC小说网手机版阅读网址：m.abcxs.com', '');
-            appendFile(thridPath, content, function () {
-                // console.log(`${thridPath} 添加成功`);
-            })
-        })
+    content = content.replace('https://www.abcxs.com/book/1279/19579469.html　　天才一秒记住本站地址：www.abcxs.com。ABC小说网手机版阅读网址：m.abcxs.com', '');
+    appendFile(chapterAddress, content, function (error) {
+        
     })
-   
-   
-    // appendFile(pathName, function () {
-    //     console.log(`${pathName} 添加成功`);
-    // })
 }

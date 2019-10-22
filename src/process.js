@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-21 11:27:37
+ * @Last Modified time: 2019-10-22 11:12:21
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -16,6 +16,10 @@ const generateFiles = require('./utils/generateFiles');
 
 const ConnectionPool = require('../src/utils/ConnectionPool')
 const connectionPool = new ConnectionPool();
+
+const { downloadDirector } = require("../project.config"); 
+const { ensureDirSync, pathExistsSync } = require('fs-extra');
+const { join } = require('path');
 
 /**@type {Array<import("inquirer").Question>} */
 const question = [
@@ -50,11 +54,17 @@ return new Promise((resolve, reject)=>{
     {
         type: "input",
         name: "fileAddress",
-        default: "./download"
+        default: function (answer) {
+            return join(downloadDirector, answer.selectedNovel.name) 
+        }
     }
 ]
 
 module.exports = prompt(question).then(({filterName, selectedNovel, fileAddress})=>{
+    if (!pathExistsSync(fileAddress)) {
+        ensureDirSync(fileAddress);
+    }
+
     spiderBookChapters(selectedNovel.url, selectedNovel.name, fileAddress).then(bookChapters=>{
         // bookChapters.length = 10;
         function callback(allChapterInfo) {

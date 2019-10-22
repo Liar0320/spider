@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-18 10:19:23 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-22 09:42:08
+ * @Last Modified time: 2019-10-22 10:37:53
  * @TODO:
  * register：注册所有的待链接
  * next：如果对象池中存在可用实例，则执行下一个链接
@@ -11,6 +11,7 @@
 const ProgressBar = require("progress");
 const Pool = require("./Pool");
 const {spiderChapterInfo} = require('./spider');
+const {maxThreadExist, rePullCount} = require('../../project.config');
 // class SpiderChapterInfo {
 //     start(chapterInfoUrl) {
 //         return spiderChapterInfo(chapterInfoUrl)
@@ -24,8 +25,9 @@ function noop() {
 
 class ConnectionPool {
     constructor() {
-        this.createFileCount = 20;
+        this.createFileCount = maxThreadExist || 20;
         this.turn = 0;
+        this.maxTurn = rePullCount;
     }
 
     register(waitConnection, seekDone) {
@@ -124,7 +126,7 @@ class ConnectionPool {
         console.log("请求失败 "+error.length + ' 章');
      
         /**如果有失败的章节 并且重新请求的次数小于四次  否则自动停止程序*/
-        if (error.length>0 && this.turn <4) {
+        if (error.length>0 && this.turn <this.maxTurn) {
             console.log("分别为：");
             error.forEach(res=>{
                 console.log(res.chapterName +' :' + res.$error.message);
