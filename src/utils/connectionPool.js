@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-18 10:19:23 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-22 10:37:53
+ * @Last Modified time: 2019-10-23 23:51:02
  * @TODO:
  * register：注册所有的待链接
  * next：如果对象池中存在可用实例，则执行下一个链接
@@ -24,10 +24,11 @@ function noop() {
 }
 
 class ConnectionPool {
-    constructor() {
+    constructor(name) {
         this.createFileCount = maxThreadExist || 20;
         this.turn = 0;
         this.maxTurn = rePullCount;
+        this.name = name;
     }
 
     register(waitConnection, seekDone) {
@@ -53,7 +54,7 @@ class ConnectionPool {
         
         this.store = [];
 
-        this.bar = new ProgressBar('  downloading [:bar] :rate/chapter :percent :etas', {
+        this.bar = new ProgressBar(':token1  downloading [:bar] :rate/chapter  :percent :etas', {
             complete: '=',
             incomplete: ' ',
             width: 20,
@@ -72,7 +73,7 @@ class ConnectionPool {
            let params = this.waitConnection.shift();
 
            instance(params.url, {isLoading: false}).then(content=>{
-            this.bar.tick({rate: params.chapterName});
+            this.bar.tick({token2: params.chapterName, token1: this.name});
             params.$code = 200;
             this.waitConnectionStatus.push(params);
             this.poolInstance.put(instance);
