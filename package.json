@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test",
+    "test": "node ./test/index.test.js",
     "start": "node ./src",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
@@ -26,6 +26,7 @@
     "inquirer": "^7.0.0",
     "ora": "^4.0.2",
     "progress": "^2.0.3",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "uuid": "^8.3.2"
   }
 }

@@ -1,4 +1,11 @@
-const baseUrl = 'http://www.abcxs.com';
+/*
+ * @Author: Lich
+ * @LastEditors: Lich
+ * @Date: 2021-02-27 16:17:28
+ * @LastEditTime: 2021-02-27 16:28:19
+ * @Description: *
+ */
+const baseUrl = 'https://www.71du.com/' //'http://www.abcxs.com';
 
 const spiderLikeBook = require("./spiderLikeBook");
 

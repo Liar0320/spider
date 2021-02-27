@@ -20,6 +20,7 @@ const ConnectionPool = require('../src/utils/ConnectionPool')
 const { downloadDirector } = require("../project.config"); 
 const { ensureDirSync, pathExistsSync } = require('fs-extra');
 const { join } = require('path');
+const { updateFileJson } = require("./downloadInfo/createBook");
 
 /**@type {Array<import("inquirer").Question>} */
 const question = [
@@ -73,7 +74,7 @@ module.exports = prompt(question).then(({filterName, selectedNovelList, fileAddr
             }
             const connectionPool = new ConnectionPool(selectedNovel.name);
 
-            spiderBookChapters(selectedNovel.url).then(bookChapters=>{
+            spiderBookChapters(selectedNovel.url).then(({book,bookChapterList})=>{
                 // bookChapters.length = 10;
                 function callback(allChapterInfo) {
                     // console.log(allChapterInfo);
@@ -82,7 +83,9 @@ module.exports = prompt(question).then(({filterName, selectedNovelList, fileAddr
                     })
                 }
                 
-                connectionPool.register(bookChapters, callback)
+                connectionPool.register(bookChapterList, callback);
+
+                updateFileJson(book);
                
                 // connectionPool.start();
         
