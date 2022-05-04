@@ -5,7 +5,6 @@
  * @LastEditTime: 2021-02-27 16:28:19
  * @Description: *
  */
-const baseUrl = 'https://www.71du.com/' //'http://www.abcxs.com';
 
 const spiderLikeBook = require("./spiderLikeBook");
 
@@ -13,26 +12,33 @@ const spiderBookChapters = require("./spiderBookChapters");
 
 const spiderChapterInfo = require("./spiderChapterInfo");
 
+const { website, search } = require("../config/website");
+
+const baseUrl = website; //'http://www.abcxs.com';
+
 /**生成搜索地址 */
 function packLikeBookUrl(fileName) {
-    return baseUrl + '/s.php?q=' + encodeURIComponent(fileName);
+  if (typeof search === "function") {
+    return search(fileName);
+  }
+  return baseUrl + search + encodeURIComponent(fileName);
 }
 
 /**生成爬取小说地址 */
 function packBookChaptersUrl(bookurl) {
-    return baseUrl + bookurl;
+  return bookurl;
 }
 
 /**模糊查找小说 */
 module.exports.spiderLikeBook = function (fileName) {
-    return spiderLikeBook(packLikeBookUrl(fileName))
-}
+  return spiderLikeBook(packLikeBookUrl(fileName));
+};
 /**爬取小说所有章节 */
 module.exports.spiderBookChapters = function (bookurl) {
-    return spiderBookChapters(packBookChaptersUrl(bookurl))
-}
+  return spiderBookChapters(packBookChaptersUrl(bookurl));
+};
 
 /**爬取小说章节内容 */
 module.exports.spiderChapterInfo = function (bookurl, config) {
-    return spiderChapterInfo(packBookChaptersUrl(bookurl), config)
-}
+  return spiderChapterInfo(packBookChaptersUrl(bookurl), config);
+};
