@@ -3,10 +3,11 @@
  */
 
 const { Book, Chapter } = require("../../downloadInfo/createBook");
+const transferEntry = require("./util");
 
 const website = `https://www.xbiquge.so`;
-const search = () =>
-  `https://www.xbiquge.so/modules/article/search.php?searchkey=%C5%CC%C1%FA`;
+const search = (searchkey = '盘龙') =>
+  `https://www.xbiquge.so/modules/article/search.php?searchkey=${transferEntry(searchkey)}`;
 
 /**
  * @param {CheerioStatic} $
