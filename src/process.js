@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2019-10-23 23:47:00
+ * @Last Modified time: 2022-09-18 23:49:33
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -21,6 +21,7 @@ const { downloadDirector } = require("../project.config");
 const { ensureDirSync, pathExistsSync } = require('fs-extra');
 const { join } = require('path');
 const { updateFileJson } = require("./downloadInfo/createBook");
+const { callHook } = require("./hooks/instance");
 
 /**@type {Array<import("inquirer").Question>} */
 const question = [
@@ -85,6 +86,12 @@ module.exports = prompt(question).then(({filterName, selectedNovelList, fileAddr
                 
                 connectionPool.register(bookChapterList, callback);
 
+             try {
+                callHook("spiderBook",book);
+             } catch (error) {
+                console.log("🚀 -> file: process.js -> line 92 -> spiderBookChapters -> error", error)
+                
+             }
                 updateFileJson(book);
                
                 // connectionPool.start();
