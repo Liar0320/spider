@@ -14,6 +14,7 @@ module.exports.Book = class Book {
     imgUrl;
     author;
     src;
+    originUrl;
     lastUpdateChapter;
     lastUpdateTime;
     brief;

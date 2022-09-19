@@ -2,7 +2,7 @@
  * @Author: lich 
  * @Date: 2019-10-17 10:52:42 
  * @Last Modified by: lich
- * @Last Modified time: 2022-09-18 23:49:33
+ * @Last Modified time: 2022-09-20 00:24:53
  * @TODO:
  * question1:"请输入你要下载的小说",
  * question2:"如果novels.length>1,请选择你要下载的小说"
@@ -80,7 +80,7 @@ module.exports = prompt(question).then(({filterName, selectedNovelList, fileAddr
                 function callback(allChapterInfo) {
                     // console.log(allChapterInfo);
                     allChapterInfo.forEach((chapterInfo)=>{
-                        generateFiles({chapterInfo, bookName: selectedNovel.name, path: resultAddress})
+                        generateFiles({chapterInfo, bookName: book.name, path: resultAddress})
                     })
                 }
                 

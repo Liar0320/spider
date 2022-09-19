@@ -33,7 +33,8 @@ const spiderBookChapters = ($, bookUrl) => {
   let book = new Book();
   book.imgUrl = $("#maininfo #fmimg img").attr("src");
   book.name = $("#maininfo #info h1").text();
-  book.src = bookUrl;
+  book.originUrl = bookUrl;
+  book.author =  $("#maininfo #info p").eq(0).text().replace("作者：","");
   book.brief = $("#intro").text();
   book.lastUpdateTime = $("#maininfo #info p").eq(2).text();
   book.lastUpdateChapter = $("#maininfo #info p").eq(3).text();
